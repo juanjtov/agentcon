@@ -4,6 +4,10 @@ Build a full Deep Research Agent in 12 hands-on tasks.
 ## 🎯 Goal
 By the end of this workshop, you will have a working Deep Research Agent web app with RAG, LLM-as-Judge, citation support, and follow up interactions.
 
+## Installation
+- `pip install -r requirements.txt`
+- create `.env` with the together api key 
+
 ## ✅ Tasks
 
 ### Task 1: Python Setup and Hello World in Cursor
@@ -26,17 +30,14 @@ By the end of this workshop, you will have a working Deep Research Agent web app
 * Save the three evidence answers into a single text file  
 * Use this file as the starting knowledge base
 
-### Task 6: Convert the Text File into a PDF
-* Load the text file  
-* Generate a PDF version of the same content
+### Task 6: Evaluate the Recall of the Insight extraction using LLM-as-a-Judge (Predict and Evaluate)
+* 
 
-### Task 7: Create Three Needle-in-Haystack PDFs
-* Create three different PDF files  
-* Each PDF contains multiple paragraphs and one hidden needle answer  
-* These form three separate knowledge sources
+### Task 7: Create Three Needle-in-Haystack files (two of them are distractor files, and one is the target file from task 5)
+
 
 ### Task 8: Chunk and Embed All Files
-* Chunk the text across all three PDFs  
+* Chunk the text across all three files  
 * Create embeddings for every chunk  
 * Store them in a vector database
 
@@ -62,4 +63,4 @@ By the end of this workshop, you will have a working Deep Research Agent web app
 * Refine insights based on additional context
 
 ## 🧩 Final Output
-A complete Deep Research Agent that retrieves information across multiple PDFs, generates structured insights, cites exact sources, evaluates recall, serves results through a Flask API, and handles follow up interactions.
+A complete Deep Research Agent that retrieves information across multiple files, generates structured insights, cites exact sources, evaluates recall, serves results through a Flask API, and handles follow up interactions.

@@ -2,10 +2,12 @@
 __pycache__/
 *.py[codz]
 *$py.class
-
+.vscode 
+outputs
 # C extensions
 *.so
-
+tasks_sol
+prompt_instructions.md
 # Distribution / packaging
 .Python
 build/
