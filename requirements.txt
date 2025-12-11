@@ -2,3 +2,5 @@ together
 tiktoken
 flask
 sentence_transformers
+numpy
+python-dotenv

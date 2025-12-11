@@ -1,0 +1,11 @@
+{
+    "user_query": "How can households reduce peak energy consumption during the evening hours",
+    "groundtruth_answers": [
+      "Households can reduce peak energy consumption by shifting flexible activities such as dishwashing and laundry to later hours when demand is lower",
+      "Using programmable thermostats to precool or preheat the home before the evening peak can lower the load during high demand periods",
+      "Adopting energy efficient appliances that require less power during operation helps reduce the household peak profile",
+      "Installing smart plugs or home energy management apps allows residents to control and schedule devices to avoid operating them at peak times",
+      "Participating in utility demand response programs can help households receive incentives for reducing consumption during peak windows",
+      "Improving insulation and air sealing can decrease heating and cooling needs which are usually the largest contributors to peak household demand"
+    ]
+  }
