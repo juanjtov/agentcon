@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Workflow Data Fabric · Enterprise Deep Research</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+            --bg: #030712;
+            --panel: rgba(10, 13, 25, 0.9);
+            --card: rgba(255, 255, 255, 0.03);
+            --yellow: #fdf7d6;
+            --green: #d7ffe5;
+            --muted: #c8d4e3;
+            --border: rgba(255, 255, 255, 0.06);
+            --shadow: 0 20px 45px rgba(5, 7, 20, 0.65);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at top, rgba(87, 86, 255, 0.25), transparent 45%), var(--bg);
+            color: white;
+        }
+
+        .page-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1.5rem 4rem;
+        }
+
+        main {
+            width: min(1100px, 100%);
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hero .tagline {
+            letter-spacing: 0.2em;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.4rem, 4vw, 3rem);
+            margin: 0 0 0.5rem;
+            font-weight: 600;
+        }
+
+        .hero p {
+            margin: 0;
+            font-size: 1.05rem;
+            color: var(--muted);
+        }
+
+        .prompt-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 1.75rem;
+            box-shadow: var(--shadow);
+            box-sizing: border-box;
+            margin-bottom: 1.5rem;
+        }
+
+        form {
+            margin: 0;
+        }
+
+        .prompt-card textarea {
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 1rem 1.25rem;
+            font-size: 1rem;
+            background: transparent;
+            color: white;
+            resize: vertical;
+            min-height: 120px;
+            line-height: 1.4;
+        }
+
+        .prompt-card textarea:focus {
+            outline: 2px solid rgba(99, 102, 241, 0.65);
+            border-color: transparent;
+        }
+
+        .form-actions {
+            margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .prompt-card button {
+            border: none;
+            border-radius: 999px;
+            padding: 0.9rem 1.8rem;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #6cf5b3, #1b9f5b);
+            color: #03100a;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .prompt-card button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .prompt-card button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            filter: brightness(1.05);
+        }
+
+        .status-text {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .safety-note {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-top: 0.85rem;
+        }
+
+        .results-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .result-card {
+            background: var(--card);
+            border-radius: 24px;
+            padding: 1.25rem 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .retrieval-card {
+            background: var(--yellow);
+            color: #1f1800;
+        }
+
+        .insight-card {
+            background: var(--green);
+            color: #0a3d19;
+        }
+
+        .result-card .card-top {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .card-label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: inherit;
+            opacity: 0.75;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            margin: 0;
+        }
+
+        .context-list,
+        .insight-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .context-list li,
+        .insight-list li {
+            padding: 0.7rem 0.85rem;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .context-id {
+            font-weight: 600;
+            display: block;
+        }
+
+        .context-source {
+            font-size: 0.85rem;
+            opacity: 0.85;
+            display: block;
+            margin-bottom: 0.45rem;
+        }
+
+        .context-list p,
+        .insight-text {
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .insight-meta {
+            margin: 0.4rem 0 0;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .citation {
+            font-weight: 600;
+        }
+
+        @media (max-width: 640px) {
+            .prompt-card {
+                padding: 1.25rem;
+            }
+
+            .result-card {
+                padding: 1rem 1.1rem;
+            }
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-shell">
+        <main>
+            <header class="hero">
+                <p class="tagline">Workflow Data Fabric</p>
+                <h1>Enterprise Deep Research</h1>
+                <p>Perform complex data analysis on live, secure data. Connect dots between isolated systems to answer why and what next.</p>
+            </header>
+
+            <section class="prompt-card">
+                <form id="query-form" autocomplete="off">
+                    <label class="sr-only" for="query-input">Ask your question</label>
+                    <textarea id="query-input" rows="3" placeholder="Hi Olivia! I am ready to dive. What are we working on today?" required></textarea>
+                    <div class="form-actions">
+                        <button type="submit" id="search-button">Search</button>
+                        <p id="status-message" class="status-text" aria-live="polite"></p>
+                    </div>
+                </form>
+                <p class="safety-note">Some answers generated by AI. Verify accuracy and context before acting.</p>
+            </section>
+
+            <section id="results" class="results-stack" aria-live="polite"></section>
+        </main>
+    </div>
+
+    <script>
+        const form = document.getElementById("query-form");
+        const input = document.getElementById("query-input");
+        const results = document.getElementById("results");
+        const status = document.getElementById("status-message");
+        const button = document.getElementById("search-button");
+
+        const escapeHtml = (unsafe) => {
+            if (unsafe === null || unsafe === undefined) {
+                return "";
+            }
+            return String(unsafe)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
+
+        const truncate = (text, max = 280) => {
+            const clean = String(text || "");
+            if (clean.length <= max) {
+                return clean;
+            }
+            return clean.slice(0, max).trim() + "…";
+        };
+
+        const createRetrievalCard = (query, chunks) => {
+            const card = document.createElement("article");
+            card.className = "result-card retrieval-card";
+
+            card.innerHTML = `
+                <div class="card-top">
+                    <p class="card-label">Searching over</p>
+                    <h3 class="card-title">${escapeHtml(query)}</h3>
+                </div>
+            `;
+
+            const list = document.createElement("ul");
+            list.className = "context-list";
+
+            if (Array.isArray(chunks) && chunks.length > 0) {
+                chunks.forEach((chunk, index) => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <span class="context-id">${index + 1}. ${escapeHtml(chunk.chunk_id || "chunk")}</span>
+                        <span class="context-source">${escapeHtml(chunk.source_file || "unknown file")}</span>
+                        <p>${escapeHtml(truncate(chunk.text || "No text available."))}</p>
+                    `;
+                    list.appendChild(li);
+                });
+            } else {
+                const empty = document.createElement("li");
+                empty.textContent = "No chunks could be retrieved for the provided query.";
+                list.appendChild(empty);
+            }
+
+            card.appendChild(list);
+            return card;
+        };
+
+        const createInsightCard = (insights) => {
+            const card = document.createElement("article");
+            card.className = "result-card insight-card";
+            card.innerHTML = `
+                <div class="card-top">
+                    <p class="card-label">Insights</p>
+                    <h3 class="card-title">What the model is seeing</h3>
+                </div>
+            `;
+
+            const list = document.createElement("ol");
+            list.className = "insight-list";
+
+            if (Array.isArray(insights) && insights.length > 0) {
+                insights.forEach((item) => {
+                    const li = document.createElement("li");
+                    li.innerHTML = `
+                        <p class="insight-text">${escapeHtml(item.insight || "Insight not available.")}</p>
+                        <p class="insight-meta">
+                            <span>${escapeHtml(item.justification || "No justification provided.")}</span>
+                            <span class="citation">Citation: ${escapeHtml(item.citation || "unknown source")}</span>
+                        </p>
+                    `;
+                    list.appendChild(li);
+                });
+            } else {
+                const placeholder = document.createElement("li");
+                placeholder.textContent = "The AI did not return any structured insights yet.";
+                list.appendChild(placeholder);
+            }
+
+            card.appendChild(list);
+            return card;
+        };
+
+        const renderResults = (query, payload) => {
+            const { retrieved_chunks, insights } = payload;
+            const retrievalCard = createRetrievalCard(query, retrieved_chunks);
+            const insightCard = createInsightCard(insights);
+            results.prepend(insightCard);
+            results.prepend(retrievalCard);
+        };
+
+        const setStatus = (message, isError = false) => {
+            status.textContent = message;
+            status.style.color = isError ? "#f87171" : "inherit";
+        };
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const query = input.value.trim();
+            if (!query) {
+                setStatus("Please enter a question to search.", true);
+                return;
+            }
+
+            setStatus("Searching for insights…");
+            button.disabled = true;
+
+            try {
+                const response = await fetch("/query", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ query }),
+                });
+
+                if (!response.ok) {
+                    const error = await response.json().catch(() => ({}));
+                    setStatus(error?.error || "Unable to reach the insight service.", true);
+                    return;
+                }
+
+                const data = await response.json();
+                renderResults(query, data);
+                setStatus("Ready for the next question.");
+            } catch (err) {
+                console.error(err);
+                setStatus("An unexpected error occurred.", true);
+            } finally {
+                button.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>

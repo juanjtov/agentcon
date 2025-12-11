@@ -10,6 +10,7 @@ import tiktoken
 import json
 from pathlib import Path
 import re
+import helpers
 
 # dotenv
 from dotenv import load_dotenv
@@ -71,7 +72,8 @@ class LlmModel:
             messages=[{"role": "user", "content": prompt}],
         )
         output = response.choices[0].message.content
-
+        # save intermediate output to a file
+        helpers.save_txt(output, "outputs/llm_response.txt")
         if get_structured_output == "xml":
             return self.parse_xml_tags(output, get_structured_output)
         elif get_structured_output == "json":

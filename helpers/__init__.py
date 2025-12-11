@@ -1,5 +1,7 @@
 import json
 import textwrap
+import os
+import pickle
 
 from .llm_model import LlmModel
 
@@ -17,6 +19,7 @@ def save_json(data, filename):
     """
     Save the data to a JSON file
     """
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, "w") as f:
         json.dump(data, f, indent=4)
 
@@ -36,7 +39,7 @@ def save_txt(data, filename):
     Save the data to a text file
     """
     data = wrap_text(data)
-
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, "w") as f:
         f.write(data)
     print(f"\nSaved data to {filename}\n")
@@ -48,3 +51,21 @@ def load_txt(filename):
     """
     with open(filename, "r") as f:
         return f.read()
+
+
+def save_pickle(data, filename):
+    """
+    Save the data to a pickle file
+    """
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, "wb") as f:
+        pickle.dump(data, f)
+    print(f"\nSaved data to {filename}\n")
+
+
+def load_pickle(filename):
+    """
+    Load the data from a pickle file
+    """
+    with open(filename, "rb") as f:
+        return pickle.load(f)

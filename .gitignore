@@ -6,6 +6,7 @@ __pycache__/
 outputs
 # C extensions
 *.so
+.tmp
 tasks_sol
 prompt_instructions.md
 # Distribution / packaging

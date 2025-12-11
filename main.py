@@ -1,7 +1,8 @@
 import argparse
-import tasks
 
-# import tasks_sol as tasks
+# import tasks
+
+import tasks_sol as tasks
 
 from dotenv import load_dotenv
 
@@ -18,7 +19,7 @@ if __name__ == "__main__":
         "--task",
         "-t",
         type=str,
-        default="task_12",
+        default="task_11",
         help="The task to run",
         choices=TASK_LIST,
     )
@@ -42,7 +43,8 @@ if __name__ == "__main__":
         tasks.task_5.task_5()
     elif args.task == "task_6":
         # Task 6: Evaluate the Recall of the Insight extraction using LLM-as-a-Judge (Predict and Evaluate)
-        tasks.task_6.task_6()
+        tasks.task_6.task_6(mode="predict")
+        tasks.task_6.task_6(mode="evaluate")
     elif args.task == "task_7":
         # Task 7: Create Three Needle-in-Haystack files (two of them are distractor files, and one is the target file from task 5)
         tasks.task_7.task_7()
